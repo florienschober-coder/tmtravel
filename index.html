@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TM Travel Family Journeys</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root {
+    --sage: #7a9e7e;
+    --sage-light: #a8c5aa;
+    --sage-dark: #4a6e4d;
+    --cream: #f5f0e8;
+    --warm-white: #faf8f4;
+    --charcoal: #2a2a2a;
+    --warm-gray: #6b6560;
+    --gold: #c9a84c;
+    --text: #2a2a2a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--text); overflow-x: hidden; }
+
+  /* HEADER & BANNER */
+  #siteHeader { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; box-shadow: 0 4px 30px rgba(0,0,0,0.08); transition: transform 0.3s; background: rgba(250,248,244,0.98); backdrop-filter: blur(12px); }
+  
+  .top-banner { background: rgba(122,158,126,0.15); color: var(--sage-dark); padding: 10px 5%; display: flex; justify-content: center; align-items: center; position: relative; font-size: 0.85rem; border-bottom: 1px solid rgba(122,158,126,0.3); transition: all 0.3s ease; }
+  .banner-text { text-align: center; width: 100%; font-weight: 600; }
+  .banner-close { position: absolute; right: 5%; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--sage-dark); transition: color 0.2s; }
+  .banner-close:hover { color: var(--charcoal); }
+
+  nav { padding: 0 5%; height: 68px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(122,158,126,0.2); }
+  
+  /* LOGO LINK STYLING */
+  .nav-brand { display: flex; flex-direction: column; line-height: 1.1; text-decoration: none; cursor: pointer; color: inherit; transition: opacity 0.3s; }
+  .nav-brand:hover { opacity: 0.8; }
+  .nav-brand .brand-main { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--sage-dark); letter-spacing: 0.02em; }
+  .nav-brand .brand-sub { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--warm-gray); }
+  
+  .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; height: 100%; }
+  .nav-links > li { display: flex; align-items: center; height: 100%; }
+  .nav-links a { text-decoration: none; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--warm-gray); transition: color 0.2s; cursor: pointer; }
+  .nav-links a:hover, .nav-links a.active { color: var(--sage-dark); }
+  .nav-links a.active { border-bottom: 2px solid var(--gold); padding-bottom: 2px; }
+  .nav-cta { background: var(--sage-dark); color: white !important; padding: 0.5rem 1.4rem; border-radius: 30px; transition: background 0.2s !important; }
+  .nav-cta:hover { background: var(--sage) !important; border-bottom: none; }
+
+  /* MEGA MENU DROPDOWN */
+  .has-dropdown { position: static !important; }
+  .mega-menu { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--sage-dark); padding: 3rem 10%; border-top: 3px solid var(--gold); box-shadow: 0 15px 40px rgba(0,0,0,0.15); z-index: 999; }
+  .has-dropdown:hover .mega-menu { display: block; animation: slideDown 0.3s ease forwards; }
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+  .mega-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; }
+  .mega-col { background: rgba(255,255,255,0.08); padding: 1.8rem; border-radius: 12px; cursor: pointer; transition: all 0.3s; text-align: left; border: 1px solid rgba(255,255,255,0.05); }
+  .mega-col:hover { background: rgba(255,255,255,0.15); transform: translateY(-4px); border-color: rgba(255,255,255,0.3); }
+  .mega-col h4 { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 1.4rem; margin-bottom: 0.5rem; }
+  .mega-col p { color: rgba(255,255,255,0.85); font-size: 0.85rem; line-height: 1.6; margin-bottom: 1.2rem; }
+  .mega-col span { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--cream); letter-spacing: 0.05em; display: inline-flex; align-items: center; gap: 0.5rem; }
+
+  /* PAGE PADDING */
+  .page { display: none; min-height: 100vh; padding-top: 108px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+  body.banner-closed .page { padding-top: 68px; }
+  .page.active { display: block; opacity: 1; transform: translateY(0); }
+  
+  .section { padding: 6rem 8%; }
+  .section-alt { background: var(--cream); }
+  .section-label { font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--sage); font-weight: 600; margin-bottom: 0.8rem; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; color: var(--charcoal); line-height: 1.2; margin-bottom: 1rem; }
+  .section-title em { font-style: italic; color: var(--sage-dark); }
+
+  /* GLOBAL KEYWORD / HASHTAG STYLING */
+  .keyword { color: var(--sage-dark); font-weight: 700; background: rgba(122,158,126,0.12); padding: 0.15rem 0.5rem; border-radius: 6px; font-size: 0.9em; display: inline-block; transition: background 0.3s; }
+  .keyword:hover { background: rgba(122,158,126,0.25); }
+
+  .btn-primary { background: var(--sage-dark); color: white; padding: 0.9rem 2.2rem; border-radius: 40px; border: none; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.04em; cursor: pointer; transition: all 0.3s; text-transform: uppercase; display: inline-block; text-align: center; }
+  .btn-primary:hover { background: var(--charcoal); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(42,42,42,0.25); }
+  
+  /* Link styling for DMOs */
+  .dmo-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--sage-dark); font-weight: 700; text-decoration: none; padding: 0.5rem 1rem; background: rgba(122,158,126,0.1); border-radius: 8px; transition: all 0.2s; border: 1px solid transparent; }
+  .dmo-link:hover { background: var(--sage-dark); color: white; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(74,110,77,0.2); }
+
+  .hero {
+    position: relative; height: calc(100vh - 108px); min-height: 560px; display: flex; align-items: center; justify-content: center; overflow: hidden;
+    background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.4)), url('train_family.png') center/cover;
+    text-align: center;
+  }
+  body.banner-closed .hero { height: calc(100vh - 68px); }
+  .hero-content { position: relative; z-index: 2; padding: 0 8%; max-width: 800px; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+  .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); padding: 0.4rem 1.2rem; border-radius: 30px; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: white; font-weight: 600; margin-bottom: 2rem; backdrop-filter: blur(8px); text-shadow: none; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 6vw, 5.5rem); line-height: 1.08; font-weight: 900; color: white; margin-bottom: 1.5rem; }
+  .hero h1 em { font-style: italic; color: var(--sage-light); }
+  .hero-sub { font-size: 1.15rem; line-height: 1.7; color: rgba(255,255,255,0.95); margin: 0 auto 2.5rem; max-width: 650px; }
+
+  .features-strip { background: var(--charcoal); padding: 2.5rem 8%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+  .feature-item { display: flex; align-items: flex-start; gap: 1rem; color: white; }
+  .feature-icon { width: 44px; height: 44px; background: rgba(122,158,126,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; border: 1px solid rgba(122,158,126,0.3); color: var(--sage-light); }
+  .feature-text h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.2rem; }
+  .feature-text p { font-size: 0.75rem; color: rgba(255,255,255,0.55); line-height: 1.5; }
+
+  .destinations-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3.5rem; }
+  .dest-card { border-radius: 20px; overflow: hidden; position: relative; cursor: pointer; transition: transform 0.4s; height: 380px; background: #ddd; }
+  .dest-card:hover { transform: scale(1.02); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+  .dest-card img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 0; transition: transform 0.6s ease; }
+  .dest-card:hover img { transform: scale(1.08); }
+  .dest-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%); display: flex; flex-direction: column; justify-content: flex-end; padding: 2rem; z-index: 1; }
+  .dest-country { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--sage-light); margin-bottom: 0.4rem; font-weight: 600; }
+  .dest-name { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: white; font-weight: 700; }
+
+  .testimonial-section { background: var(--sage-dark); color: white; padding: 5rem 8%; text-align: center; }
+  .testimonial-text { font-family: 'Playfair Display', serif; font-size: clamp(1.3rem, 3vw, 2rem); font-style: italic; line-height: 1.6; max-width: 700px; margin: 0 auto 2rem; }
+  .stars { color: var(--gold); font-size: 1.2rem; margin-bottom: 1rem; }
+
+  .journey-hero { background: linear-gradient(135deg, #2a3d2c 0%, #3d5c40 50%, #4a6e4d 100%); padding: 6rem 8% 5rem; color: white; text-align: center; }
+  .journey-hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; line-height: 1.1; margin-bottom: 1rem; }
+  .journey-hero p { font-size: 1.1rem; color: rgba(255,255,255,0.8); max-width: 650px; margin: 0 auto 2.5rem; line-height: 1.8; }
+
+  .featured-photo { width: 100%; max-width: 1000px; height: 450px; margin: 3rem auto; border-radius: 20px; object-fit: cover; display: block; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+
+  .itinerary-container { display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; margin-top: 4rem; }
+  .itinerary-nav { position: sticky; top: 130px; align-self: start; }
+  .day-tabs { display: flex; flex-direction: column; gap: 0.8rem; }
+  .day-tab { padding: 1.2rem; border-radius: 12px; cursor: pointer; transition: all 0.25s; display: flex; align-items: center; gap: 1.2rem; border: 1px solid rgba(122,158,126,0.2); background: white; }
+  .day-tab.active { background: var(--sage-dark); color: white; border-color: var(--sage-dark); box-shadow: 0 10px 20px rgba(74,110,77,0.2); }
+  .day-tab .day-num { font-size: 1.4rem; color: var(--sage-dark); width: 30px; text-align: center; }
+  .day-tab.active .day-num { color: white; }
+  .day-tab .day-info h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.2rem; }
+  .day-tab .day-info p { font-size: 0.8rem; color: var(--warm-gray); }
+  .day-tab.active .day-info p { color: rgba(255,255,255,0.8); }
+
+  .day-detail { display: none; }
+  .day-detail.active { display: block; animation: fadeUp 0.4s ease; }
+
+  .day-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--cream); }
+  .day-header h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--charcoal); margin-bottom: 0.5rem; }
+  .day-header p { font-size: 1rem; color: var(--warm-gray); line-height: 1.6; }
+
+  .activity-item { display: flex; gap: 1.5rem; align-items: flex-start; padding: 1.5rem; background: var(--cream); border-radius: 14px; margin-bottom: 1.2rem; border: 1px solid transparent; transition: all 0.3s; }
+  .activity-item:hover { background: white; border-color: rgba(122,158,126,0.3); box-shadow: 0 8px 20px rgba(0,0,0,0.04); transform: translateY(-3px); }
+  .activity-time { font-size: 0.75rem; letter-spacing: 0.1em; color: var(--sage-dark); font-weight: 700; min-width: 70px; text-transform: uppercase; padding-top: 0.3rem; }
+  .activity-icon { font-size: 1.5rem; min-width: 30px; text-align: center; color: var(--gold); }
+  .activity-info h4 { font-size: 1.05rem; font-weight: 700; color: var(--charcoal); margin-bottom: 0.4rem; }
+  .activity-info p { font-size: 0.9rem; color: var(--warm-gray); line-height: 1.6; }
+
+  .content-img { width: 100%; height: 350px; object-fit: cover; border-radius: 16px; margin: 2rem 0; box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+
+  .inclusion-box { background: white; border-radius: 16px; padding: 2rem; border: 1px solid rgba(122,158,126,0.2); transition: box-shadow 0.3s; }
+  .inclusion-box:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
+  .inclusion-box h4 { font-size: 1rem; font-weight: 700; color: var(--charcoal); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.8rem; }
+  .inclusion-box h4 i { color: var(--sage-dark); font-size: 1.2rem; }
+  .inclusion-box p { font-size: 0.9rem; color: var(--warm-gray); line-height: 1.6; }
+
+  /* ABOUT / CSR SECTION CSS */
+  .eco-hero { background: linear-gradient(160deg, #1a2e1b 0%, #2d4a2e 60%, #3d6040 100%); padding: 6rem 8%; color: white; text-align: center; }
+  .eco-hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 900; line-height: 1.1; margin: 1.5rem 0; }
+  .eco-hero p { font-size: 1.15rem; color: rgba(255,255,255,0.8); max-width: 700px; margin: 0 auto; line-height: 1.8; }
+
+  .csr-content-wrapper { max-width: 900px; margin: 0 auto; padding: 4rem 5%; font-size: 1.05rem; line-height: 1.8; color: var(--text); }
+  .csr-content-wrapper p { margin-bottom: 1.5rem; }
+  .csr-content-wrapper h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--sage-dark); margin: 2rem 0 1rem; }
+
+  .csr-image-banner { position: relative; height: 480px; overflow: hidden; }
+  .csr-image-banner img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.05); transition: transform 8s ease; }
+  .csr-image-banner:hover img { transform: scale(1); }
+  .csr-image-banner-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 70%, transparent 100%); display: flex; align-items: center; padding: 0 8%; }
+  .csr-banner-quote { max-width: 520px; color: white; }
+  .csr-banner-quote blockquote { font-family: 'Playfair Display', serif; font-size: clamp(1.4rem, 2.5vw, 2rem); font-style: italic; line-height: 1.5; margin-bottom: 1rem; }
+  .csr-banner-quote cite { font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--sage-light); font-style: normal; font-weight: 600; }
+
+  .csr-stats-row { background: var(--charcoal); padding: 3rem 8%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+  .csr-stat { text-align: center; }
+  .csr-stat-number { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 900; color: var(--gold); display: block; line-height: 1; margin-bottom: 0.5rem; }
+  .csr-stat-label { font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.55); font-weight: 600; }
+
+  .csr-pillars { padding: 5rem 8%; background: var(--warm-white); }
+  .pillars-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3.5rem; }
+  .pillar-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); transition: transform 0.4s, box-shadow 0.4s; display: flex; flex-direction: column; }
+  .pillar-card:hover { transform: translateY(-8px); box-shadow: 0 16px 40px rgba(0,0,0,0.1); }
+  .pillar-card-img-wrap { overflow: hidden; height: 200px; }
+  .pillar-card-img { height: 200px; object-fit: cover; width: 100%; transition: transform 0.6s ease; display: block; }
+  .pillar-card:hover .pillar-card-img { transform: scale(1.07); }
+  .pillar-card-body { padding: 2rem; flex: 1; }
+  .pillar-icon { width: 46px; height: 46px; background: rgba(122,158,126,0.12); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.2rem; font-size: 1.3rem; color: var(--sage-dark); }
+  .pillar-card-body h3 { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: var(--charcoal); margin-bottom: 0.8rem; }
+  .pillar-card-body p { font-size: 0.9rem; color: var(--warm-gray); line-height: 1.7; }
+  .pillar-full { grid-column: 1 / span 2; }
+  .pillar-full .pillar-card-img-wrap { height: 260px; }
+  .pillar-full .pillar-card-img { height: 260px; }
+
+  /* CO2 ANIMATION CSS */
+  .co2-section { background: var(--cream); padding: 5rem 8%; }
+  .co2-visual { max-width: 800px; margin: 3rem auto 0; }
+  .co2-bar-row { margin-bottom: 2.2rem; }
+  .co2-bar-label { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.6rem; }
+  .co2-bar-label span:first-child { font-size: 0.9rem; font-weight: 600; color: var(--charcoal); display: flex; align-items: center; gap: 0.6rem; }
+  .co2-bar-label span:last-child { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--charcoal); }
+  .co2-bar-track { height: 20px; background: rgba(0,0,0,0.06); border-radius: 30px; overflow: hidden; }
+  .co2-bar-fill { height: 100%; border-radius: 30px; transform: scaleX(0); transform-origin: left; transition: transform 1.4s cubic-bezier(0.16,1,0.3,1); }
+  .co2-bar-fill.plane { background: linear-gradient(90deg, #b03030, #e05050); width: 100%; }
+  .co2-bar-fill.train { background: linear-gradient(90deg, var(--sage-dark), var(--sage-light)); width: 20.6%; } /* Adjusted to ~20.6% for the 33/160 ratio */
+  .co2-bar-fill.animated { transform: scaleX(1); }
+
+  .stakeholder-section { background: var(--cream); padding: 5rem 8%; }
+  .stakeholder-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 3rem; }
+  .stakeholder-box { background: white; padding: 3rem; border-radius: 20px; border-top: 6px solid var(--sage-dark); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+  .stakeholder-box h3 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--charcoal); margin-bottom: 2rem; }
+  .sh-list { list-style: none; }
+  .sh-list li { margin-bottom: 1.5rem; padding-left: 2rem; position: relative; }
+  .sh-list li::before { content: '\f0da'; font-family: 'FontAwesome'; position: absolute; left: 0; color: var(--gold); font-size: 1.2rem; top: 2px; }
+  .sh-list strong { color: var(--sage-dark); display: block; font-size: 1.05rem; margin-bottom: 0.3rem; }
+  .sh-list p { font-size: 0.9rem; color: var(--warm-gray); line-height: 1.6; }
+
+  .goals-section { padding: 6rem 8%; }
+  .goals-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; margin-top: 4rem; }
+  .goal-card { text-align: center; padding: 3rem 2rem; border: 1px solid rgba(122,158,126,0.3); border-radius: 20px; transition: all 0.4s ease; background: white; }
+  .goal-card:hover { transform: translateY(-10px); background: var(--sage-dark); color: white; box-shadow: 0 20px 40px rgba(74,110,77,0.2); }
+  .goal-card:hover p, .goal-card:hover h4 { color: white; }
+  .goal-card:hover .goal-year { color: var(--sage-light); }
+  .goal-year { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 700; color: var(--gold); margin-bottom: 1.5rem; transition: color 0.4s; }
+  .goal-card h4 { font-size: 1.2rem; margin-bottom: 1rem; color: var(--charcoal); font-weight: 700; transition: color 0.4s; }
+  .goal-card p { font-size: 0.95rem; color: var(--warm-gray); line-height: 1.6; transition: color 0.4s; }
+
+  .ai-disclaimer { max-width: 900px; margin: 0 auto 4rem; padding: 1.5rem; border-radius: 12px; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3); font-size: 0.85rem; color: var(--warm-gray); display: flex; align-items: flex-start; gap: 1rem; }
+  .ai-disclaimer i { font-size: 1.5rem; color: var(--gold); margin-top: 0.2rem; }
+
+  /* BLOG CSS */
+  .blog-hero { background: var(--cream); padding: 7rem 8% 5rem; text-align: center; border-bottom: 1px solid rgba(122,158,126,0.2); }
+  .blog-hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3.8rem); font-weight: 900; color: var(--charcoal); max-width: 900px; margin: 0 auto; line-height: 1.2; }
+  .blog-meta { font-size: 0.85rem; color: var(--warm-gray); margin-top: 2rem; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; }
+  .blog-content { max-width: 750px; margin: 0 auto; padding: 5rem 5%; font-size: 1.1rem; line-height: 1.85; color: var(--text); }
+  .blog-content p { margin-bottom: 1.8rem; }
+  .blog-content .dropcap { float: left; font-family: 'Playfair Display', serif; font-size: 4rem; line-height: 0.8; padding-top: 8px; padding-right: 12px; padding-left: 3px; color: var(--sage-dark); font-weight: 700; }
+  
+  .blog-sources { margin-top: 3rem; padding: 2rem; background: var(--cream); border-radius: 16px; border-left: 4px solid var(--sage-dark); }
+  .blog-sources h4 { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--sage-dark); font-weight: 700; margin-bottom: 1rem; }
+  .blog-sources ul { list-style: none; padding: 0; }
+  .blog-sources li { font-size: 0.88rem; color: var(--warm-gray); line-height: 1.7; padding-left: 1.2rem; position: relative; margin-bottom: 0.5rem; }
+  .blog-sources li::before { content: '—'; position: absolute; left: 0; color: var(--sage-dark); }
+  .blog-sources em { font-style: italic; }
+
+  /* CONTACT CSS */
+  .contact-layout { display: grid; grid-template-columns: 1fr 1.2fr; min-height: calc(100vh - 68px); }
+  .contact-left { background: linear-gradient(135deg, var(--sage-dark) 0%, #2a3d2c 100%); padding: 6rem 5rem; color: white; display: flex; flex-direction: column; justify-content: center; }
+  .contact-right { padding: 6rem 5rem; display: flex; flex-direction: column; justify-content: center; background: var(--warm-white); }
+  .form-group { margin-bottom: 1.5rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .form-group label { display: block; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sage-dark); margin-bottom: 0.6rem; }
+  .form-group input, .form-group select { width: 100%; padding: 1rem 1.2rem; border: 2px solid rgba(122,158,126,0.2); border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; background: white; }
+  .form-submit { width: 100%; background: var(--sage-dark); color: white; padding: 1.2rem; border-radius: 12px; border: none; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; margin-top: 1rem; }
+
+  /* CP STYLE FOOTER */
+  .new-footer { background: linear-gradient(135deg, var(--sage-dark) 0%, #2a3d2c 100%); color: white; padding: 5rem 8% 3rem; font-family: 'DM Sans', sans-serif; margin-top: 0; }
+  .footer-usps-title { text-align: center; font-family: 'DM Sans', sans-serif; font-size: 1.5rem; font-weight: 500; margin-bottom: 3.5rem; color: white; letter-spacing: 0.02em; }
+  .footer-usps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2.5rem; margin-bottom: 4rem; padding-bottom: 4rem; border-bottom: 1px solid rgba(255,255,255,0.15); }
+  .f-usp { text-align: center; }
+  .f-usp i { font-size: 2.5rem; margin-bottom: 1.2rem; color: var(--sage-light); }
+  .f-usp h5 { font-size: 0.95rem; margin-bottom: 0.6rem; font-weight: 600; letter-spacing: 0.02em; }
+  .f-usp p { font-size: 0.8rem; color: rgba(255,255,255,0.7); line-height: 1.5; }
+
+  .footer-bottom { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 3rem; }
+  .f-col { display: flex; flex-direction: column; gap: 0.8rem; }
+  .f-col h6 { font-size: 0.85rem; font-weight: 600; color: white; margin-bottom: 0.5rem; }
+  
+  .lang-select-wrapper { position: relative; display: inline-block; }
+  .lang-select-wrapper i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: white; font-size: 1rem; pointer-events: none; }
+  .lang-select { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.7rem 1rem 0.7rem 2.5rem; border-radius: 6px; font-family: inherit; font-size: 0.9rem; outline: none; cursor: pointer; appearance: none; -webkit-appearance: none; width: 220px; transition: border-color 0.3s; }
+  .lang-select:hover { border-color: white; }
+  .lang-select option { background: var(--sage-dark); color: white; }
+  
+  .social-links { display: flex; gap: 1.2rem; }
+  .social-links a { color: white; font-size: 1.6rem; transition: transform 0.3s, color 0.3s; }
+  .social-links a:hover { color: var(--sage-light); transform: translateY(-3px); }
+
+  .payment-icons { display: flex; gap: 0.5rem; flex-wrap: wrap; max-width: 250px; }
+  .payment-icon { width: 45px; height: 30px; background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+
+  @media (max-width: 900px) {
+    .features-strip, .destinations-grid, .itinerary-container, .contact-layout, .csr-stats-row, .goals-grid, .stakeholder-grid { grid-template-columns: 1fr; }
+    .pillar-full { grid-column: 1 / -1; }
+    .pillars-grid { grid-template-columns: 1fr; }
+    .footer-usps { grid-template-columns: repeat(2, 1fr); }
+    .mega-cols { grid-template-columns: 1fr; gap: 1rem; }
+    .contact-left, .contact-right { padding: 4rem 2rem; }
+    nav { padding: 0 5%; }
+    .nav-links { gap: 1rem; }
+    .nav-links a { font-size: 0.7rem; }
+  }
+  @media (max-width: 600px) {
+    .footer-usps { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; gap: 2.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header id="siteHeader">
+  <div id="topBanner" class="top-banner">
+    <div class="banner-text">
+      <i class="fa-solid fa-bullhorn" style="margin-right:8px;"></i>
+      Start your Journey Today! Follow us on Social Media: <strong>@tmtravel.familyjourneys</strong>
+    </div>
+    <button onclick="closeBanner()" class="banner-close"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+
+  <nav id="mainNav">
+    <!-- Clickable logo added -->
+    <a href="#" class="nav-brand" onclick="showPage('home')">
+      <span class="brand-main">TM Travel</span>
+      <span class="brand-sub">Family Journeys</span>
+    </a>
+    <ul class="nav-links">
+      <li><a onclick="showPage('home')" id="nav-home" class="active">Home</a></li>
+      
+      <li class="has-dropdown">
+        <a onclick="showPage('journey')" id="nav-journey" style="display:flex;align-items:center;">Destinations <i class="fa-solid fa-chevron-down" style="font-size:0.6rem; margin-left:5px;"></i></a>
+        <div class="mega-menu">
+          <div class="mega-cols">
+            <div class="mega-col" onclick="event.stopPropagation(); goToDestination(1);">
+              <h4>Italy</h4>
+              <p>Culture, La Dolce Vita, Venetian Canals & breathtaking Dolomites.</p>
+              <span>View Itinerary <i class="fa-solid fa-arrow-right"></i></span>
+            </div>
+            <div class="mega-col" onclick="event.stopPropagation(); goToDestination(2);">
+              <h4>Slovenia</h4>
+              <p>Hidden Alpine lakes, green forests & eco-friendly adventures.</p>
+              <span>View Itinerary <i class="fa-solid fa-arrow-right"></i></span>
+            </div>
+            <div class="mega-col" onclick="event.stopPropagation(); goToDestination(3);">
+              <h4>Croatia</h4>
+              <p>Waterfalls, coastal relaxation & active nature rewilding.</p>
+              <span>View Itinerary <i class="fa-solid fa-arrow-right"></i></span>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li><a onclick="showPage('about')" id="nav-about">About Us / CSR</a></li>
+      <li><a onclick="showPage('blog')" id="nav-blog">Blog</a></li>
+      <li><a onclick="showPage('contact')" id="nav-contact" class="nav-cta">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div id="page-home" class="page active">
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge"><i class="fa-solid fa-train"></i> Choose Your 14-Day Adventure</div>
+      <h1>It Is Not<br>Just A <em>Trip.</em></h1>
+      <!-- Hashtag styling as per screenshot -->
+      <p class="hero-sub">A fully curated, low-stress, <span class="keyword" style="background:var(--sage-dark);color:white;padding:0.2rem 0.6rem;border-radius:4px;">#SustainableVacation</span> experience in Italy, Slovenia <strong>or</strong> Croatia — perfectly designed for families to escape decision fatigue. <span class="keyword" style="background:var(--sage-dark);color:white;padding:0.2rem 0.6rem;border-radius:4px;">#FamilyFriendlyTravel</span></p>
+      <div style="display:flex;justify-content:center;gap:1rem;">
+        <button class="btn-primary" onclick="showPage('journey')">View Destinations</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="features-strip">
+    <div class="feature-item">
+      <div class="feature-icon"><i class="fa-regular fa-calendar-check"></i></div>
+      <div class="feature-text"><h4>Pre-booked Routes</h4><p>All train tickets arranged</p></div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+      <div class="feature-text"><h4>24/7 Support</h4><p>Emergency assistance</p></div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon"><i class="fa-solid fa-house-chimney"></i></div>
+      <div class="feature-text"><h4>Certified Partners</h4><p>Trusted local providers</p></div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon"><i class="fa-solid fa-mobile-screen"></i></div>
+      <div class="feature-text"><h4>Digital Itinerary</h4><p>Day-by-day plans</p></div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="section-label">Three Options, One Standard</div>
+    <div class="section-title" style="text-align:center;">Choose Your <em>Destination</em></div>
+    <div class="destinations-grid">
+      <div class="dest-card" onclick="goToDestination(1);">
+        <img src="italy.png" alt="Italy">
+        <div class="dest-overlay"><div class="dest-country">Option 1</div><div class="dest-name">Italy</div></div>
+      </div>
+      <div class="dest-card" onclick="goToDestination(2);">
+        <img src="slovenia.png" alt="Slovenia">
+        <div class="dest-overlay"><div class="dest-country">Option 2</div><div class="dest-name">Slovenia</div></div>
+      </div>
+      <div class="dest-card" onclick="goToDestination(3);">
+        <img src="croatia.png" alt="Croatia">
+        <div class="dest-overlay"><div class="dest-country">Option 3</div><div class="dest-name">Croatia</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonial-section">
+    <div class="stars">
+      <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+    </div>
+    <p class="testimonial-text">"As working parents, we suffer from decision fatigue. This trip was the best we've ever had. Everything was taken care of, so we could just be together and enjoy. <span class="keyword" style="background:rgba(255,255,255,0.15); color:white;">#TravelWithKids</span>"</p>
+    <div>Verified Family Traveller</div>
+  </section>
+</div>
+
+<div id="page-journey" class="page">
+  <div class="journey-hero">
+    <h1>14 Days of<br>Family Adventure</h1>
+    <p>Choose your ideal destination. Whichever country you select, you are guaranteed our signature blend of nature, culture, and low-stress travel. We handle the logistics; you focus on your family.</p>
+    <button class="btn-primary" onclick="showPage('contact')" style="background:var(--gold);color:var(--charcoal);">Book Your Destination</button>
+  </div>
+
+  <section class="section">
+    <div class="section-label" style="text-align:center;">Experience The Journey</div>
+    <img src="nieuwe-foto.jpg" alt="Family adventure" class="featured-photo">
+
+    <div class="itinerary-container">
+      <div class="itinerary-nav">
+        <div class="section-label" style="margin-bottom:1rem;">Select Destination</div>
+        <div class="day-tabs">
+          <div class="day-tab active" onclick="showDay(1)">
+            <div class="day-num"><i class="fa-solid fa-location-dot"></i></div>
+            <div class="day-info"><h4>Italy Itinerary</h4><p>Culture & La Dolce Vita</p></div>
+          </div>
+          <div class="day-tab" onclick="showDay(2)">
+            <div class="day-num"><i class="fa-solid fa-location-dot"></i></div>
+            <div class="day-info"><h4>Slovenia Itinerary</h4><p>Alps, Lakes & Nature</p></div>
+          </div>
+          <div class="day-tab" onclick="showDay(3)">
+            <div class="day-num"><i class="fa-solid fa-location-dot"></i></div>
+            <div class="day-info"><h4>Croatia Itinerary</h4><p>Coastlines & Waterfalls</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="itinerary-content">
+        <img src="klimpark.jpg" alt="Family on a bridge in the forest" class="content-img">
+
+        <div class="day-detail active" id="day-1">
+          <div class="day-header">
+            <h2>14 Days in Italy</h2>
+            <p>From authentic pasta making to the breathtaking Dolomites, experience Italian culture without the stress of navigating it alone. <span class="keyword">#CulturalExperiences</span></p>
+            
+            <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+              <a href="https://www.italia.it/en" target="_blank" class="dmo-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Discover more about Italy</a>
+              <a href="https://www.suedtirol.info/en" target="_blank" class="dmo-link"><i class="fa-solid fa-mountain"></i> Explore the Dolomites</a>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-time">Week 1</div>
+            <div class="activity-icon"><i class="fa-solid fa-landmark"></i></div>
+            <div class="activity-info"><h4>Venice & Northern Charm</h4><p>Arrive via seamless train connections and settle into your pre-equipped premium glamping site. Spend the first week exploring kid-friendly canal tours, taking a glass-blowing workshop on Murano, and participating in authentic pasta-making classes with a local family.</p></div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-time">Week 2</div>
+            <div class="activity-icon"><i class="fa-solid fa-mountain-sun"></i></div>
+            <div class="activity-info"><h4>Dolomites & Nature</h4><p>Travel by train to the stunning Italian mountains. Enjoy safe, age-appropriate climbing parks, family mountain biking, and relaxed afternoons by mountain lakes. Conclude with a farewell dinner in a traditional Trattoria.</p></div>
+          </div>
+        </div>
+
+        <div class="day-detail" id="day-2">
+          <div class="day-header">
+            <h2>14 Days in Slovenia</h2>
+            <p>A green oasis perfect for active families. Discover hidden lakes and deep forests in one of Europe's most sustainable countries. <span class="keyword">#NatureConnection</span></p>
+            
+            <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+              <a href="https://www.slovenia.info/en" target="_blank" class="dmo-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Discover more about Slovenia</a>
+              <a href="https://www.bled.si/en/" target="_blank" class="dmo-link"><i class="fa-solid fa-water"></i> Explore Lake Bled</a>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-time">Week 1</div>
+            <div class="activity-icon"><i class="fa-brands fa-fort-awesome"></i></div>
+            <div class="activity-info"><h4>Ljubljana & Alpine Lakes</h4><p>Start in the green capital, exploring the dragon bridge and castle. Move to Lake Bled for rowing, swimming, and exploring the island. The perfect balance of easy cultural sights and outdoor freedom.</p></div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-time">Week 2</div>
+            <div class="activity-icon"><i class="fa-solid fa-tree"></i></div>
+            <div class="activity-info"><h4>Triglav & River Adventures</h4><p>Head deeper into nature. Experience guided wildlife spotting, beginner-friendly canoeing on the crystal-clear Soča River, and campfire evenings at your eco-certified mobile home park.</p></div>
+          </div>
+        </div>
+
+        <div class="day-detail" id="day-3">
+          <div class="day-header">
+            <h2>14 Days in Croatia</h2>
+            <p>Combine spectacular coastal relaxation with meaningful engagement in local rewilding and nature restoration. <span class="keyword">#EcoFriendlyHoliday</span></p>
+            
+            <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+              <a href="https://croatia.hr/en-GB" target="_blank" class="dmo-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Discover more about Croatia</a>
+              <a href="https://np-plitvicka-jezera.hr/en/" target="_blank" class="dmo-link"><i class="fa-solid fa-leaf"></i> Explore Plitvice Lakes</a>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-time">Week 1</div>
+            <div class="activity-icon"><i class="fa-solid fa-water"></i></div>
+            <div class="activity-info"><h4>Waterfalls & Rewilding</h4><p>Start your journey at the breathtaking Plitvice Lakes. Spend two days with our partners in the Velebit mountains, where your family actively participates in nature restoration and forest tracking.</p></div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-time">Week 2</div>
+            <div class="activity-icon"><i class="fa-solid fa-umbrella-beach"></i></div>
+            <div class="activity-info"><h4>Dalmatian Coast & History</h4><p>Take the train to the sunny coast. Enjoy secluded beach days, guided snorkelling, and turn historical city walks into exciting treasure hunts for the kids along ancient city walls.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="section-label">Pricing Overview</div>
+    <div class="section-title">What's <em>Included</em></div>
+    <p style="margin-bottom:2rem;color:var(--warm-gray);">Prices apply to your chosen destination. We believe in transparent, stress-free pricing.</p>
+    <img src="glamping.jpg" alt="Family arriving in a luxury glamping tent" class="content-img" style="height:450px;margin-bottom:3rem;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+      <div class="inclusion-box">
+        <h4><i class="fa-solid fa-train-tram"></i> Train Travel</h4>
+        <p>All inter-city train tickets to and within your destination. Reserved family compartments. Est: €1,100–1,300.</p>
+      </div>
+      <div class="inclusion-box">
+        <h4><i class="fa-solid fa-campground"></i> Accommodation</h4>
+        <p>Equipped premium tents & mobile homes. No gear needed, everything is set up upon arrival. Est: €1,200–1,800.</p>
+      </div>
+      <div class="inclusion-box">
+        <h4><i class="fa-solid fa-person-hiking"></i> Family Activities</h4>
+        <p>Destination-specific, age-appropriate activities (e.g. climbing parks, pasta making) with local guides. Est: €500–900.</p>
+      </div>
+      <div class="inclusion-box" style="border-color:var(--sage-dark);background:rgba(122,158,126,0.05);">
+        <h4><i class="fa-solid fa-seedling"></i> CO2-Positive Upgrade (Optional)</h4>
+        <p>Transcends carbon neutrality. Directly fund verified rewilding projects along your travel corridor. (Prices vary).</p>
+      </div>
+    </div>
+    <div style="background:var(--charcoal);color:white;padding:2rem;border-radius:16px;margin-top:2rem;text-align:center;">
+      <h4 style="font-size:1.2rem;font-family:'Playfair Display',serif;margin-bottom:0.5rem;color:var(--gold);">Total Estimated Price</h4>
+      <p style="font-size:0.95rem;color:rgba(255,255,255,0.8);">Total for the whole family (14 days) is estimated between <strong>€3,650 – €5,200</strong>.</p>
+    </div>
+  </section>
+
+</div>
+
+<div id="page-about" class="page">
+
+  <div class="eco-hero">
+    <div style="background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.3);padding:0.4rem 1.2rem;border-radius:30px;font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;font-weight:600;display:inline-block;margin-bottom:1rem;"><i class="fa-solid fa-globe"></i> Corporate Social Responsibility</div>
+    <h1>About Us:<br>Leave a Legacy.</h1>
+    <p>Family adventures at a slower pace. We provide the roadmap and the tent; you support the locals and create the memories, all with a smaller footprint. <span class="keyword" style="background:rgba(255,255,255,0.15); color:white;">#SlowTravel</span></p>
+  </div>
+
+  <div class="csr-image-banner">
+    <img src="preview-4.webp" alt="Looking out the train window">
+    <div class="csr-image-banner-overlay">
+      <div class="csr-banner-quote">
+        <blockquote>&ldquo;Why did the &lsquo;right&rsquo; choice always have to be the hardest one?&rdquo;</blockquote>
+        <cite>&mdash; The founders of TM Travel, on a train platform in northern Italy</cite>
+      </div>
+    </div>
+  </div>
+
+  <div class="csr-stats-row">
+    <!-- Text adjusted to 5 times -->
+    <div class="csr-stat"><span class="csr-stat-number">5&times;</span><span class="csr-stat-label">Less CO&#178; vs. flying</span></div>
+    <div class="csr-stat"><span class="csr-stat-number">15%</span><span class="csr-stat-label">Profits reinvested in nature</span></div>
+    <div class="csr-stat"><span class="csr-stat-number">40+</span><span class="csr-stat-label">Trees per family trip</span></div>
+    <div class="csr-stat"><span class="csr-stat-number">100%</span><span class="csr-stat-label">Local certified partners</span></div>
+  </div>
+
+  <div class="csr-content-wrapper">
+    <div class="section-label" style="text-align:center;">Our Story</div>
+    <h3 style="text-align:center;">From Sustainability to Regenerative Tourism</h3>
+    <p>At TM Travel Family Journeys, we believe that exploring the world shouldn't cost the earth. However, we also know that simply being 'sustainable' — causing no additional damage and maintaining the status quo — is no longer enough in today's world. We are fiercely committed to <strong>Regenerative Tourism</strong>. This means we actively design our trips to ensure that we leave a destination better, healthier, and more resilient than we found it.</p>
+    <p><strong>Why do we do this?</strong> It started during a family trip to Italy. We stood there with two young kids, incredibly heavy backpacks, and the typical stress of a 'sustainable' holiday. We wanted so badly to set a good example. No flying. Into nature. Supporting local businesses. But honestly? It was exhausting. Transferring trains with all that luggage was a nightmare, and we felt more like sherpas than relaxed parents.</p>
+    <p>When we finally arrived at a beautiful, quiet campsite — far from the masses flooding the Italian cities — it clicked. The owners of the small local markets were struggling to compete with the all-inclusive giants, while we, the 'conscious' parents, lacked the energy to piece together these hidden, small-scale spots ourselves.</p>
+    <p>We realized we weren't the only ones. So many parents want to show their kids the world: canoeing, playing outside, eating locally, and seeing how beautiful nature truly is. <span class="keyword">#NatureConnection</span> But they also just need a real vacation. Peace of mind. No hassle. That is why we started this.</p>
+    <p>We are highly allergic to greenwashing. We don't use fluffy words or vague promises — we rely on facts. We exclusively partner with accommodations and guides that hold recognized, independent eco-labels such as Travelife or Green Destinations.</p>
+    <p style="font-weight:600;text-align:center;margin-top:2rem;color:var(--charcoal);">No greenwashing. No lugging tent pegs around. Just the space to truly be together, knowing that your presence leaves the place better than you found it.</p>
+  </div>
+
+  <section style="background:var(--cream);padding:5rem 8%;">
+    <div style="text-align:center;margin-bottom:3.5rem;">
+      <div class="section-label">The People Behind TM Travel</div>
+      <div class="section-title">Meet Our <em>Founders</em></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;max-width:1000px;margin:0 auto;">
+
+      <div style="background:white;border-radius:24px;overflow:hidden;box-shadow:0 10px 35px rgba(0,0,0,0.07);">
+        <img src="florien.jpg" alt="Florien Schober" style="width:100%;height:300px;object-fit:cover;object-position:top;">
+        <div style="padding:2rem;">
+          <div style="font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--charcoal);margin-bottom:0.2rem;">Florien Schober</div>
+          <div style="font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);font-weight:600;margin-bottom:1.2rem;">Co-founder &amp; CEO · Routes &amp; Partnerships</div>
+          <p style="font-size:0.92rem;color:var(--warm-gray);line-height:1.75;">Florien is from Brabant and worked for several years in the events industry before deciding she wanted to build something that outlasts a weekend festival. Within TM Travel she leads the overall vision and handles all destination research, route planning, and partner vetting. Every accommodation on our list has been visited by Florien personally — she refuses to recommend anywhere she has not spent at least one night herself. Her rule: if the place feels soulless, we do not work with them.</p>
+          <div style="margin-top:1.3rem;padding-top:1.2rem;border-top:1px solid var(--cream);font-size:0.87rem;color:var(--sage-dark);font-style:italic;line-height:1.6;">"I get genuinely annoyed by travel that feels like a checklist. There is so much more to a place than the three sights on TripAdvisor."</div>
+        </div>
+      </div>
+
+      <div style="background:white;border-radius:24px;overflow:hidden;box-shadow:0 10px 35px rgba(0,0,0,0.07);">
+        <img src="Screenshot_2026-05-27_at_12_06_38.png" alt="Matthew Kluis" style="width:100%;height:300px;object-fit:cover;object-position:top;">
+        <div style="padding:2rem;">
+          <div style="font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--charcoal);margin-bottom:0.2rem;">Matthew Kluis</div>
+          <div style="font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);font-weight:600;margin-bottom:1.2rem;">Co-founder · Sustainability &amp; Communications</div>
+          <p style="font-size:0.92rem;color:var(--warm-gray);line-height:1.75;">Matthew wrote his research paper on the difference between sustainable and regenerative tourism — a distinction he cares about deeply. Within TM Travel he oversees all CSR commitments, manages the relationships with our NGO partners, and makes sure that nothing we say publicly is something we cannot back up with facts. He is also the one who calls out greenwashing in meetings, which happens more often in this industry than you would expect.</p>
+          <div style="margin-top:1.3rem;padding-top:1.2rem;border-top:1px solid var(--cream);font-size:0.87rem;color:var(--sage-dark);font-style:italic;line-height:1.6;">"Sustainability is the floor, not the ceiling. We are not here to do the minimum — we are here to leave things genuinely better."</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="csr-pillars">
+    <div style="text-align:center;max-width:700px;margin:0 auto;">
+      <div class="section-label">What We Stand For</div>
+      <div class="section-title">Our Three <em>Pillars</em></div>
+      <p style="color:var(--warm-gray);line-height:1.7;">Every decision at TM Travel runs through three non-negotiable commitments. These are not slogans — they are our operating system.</p>
+    </div>
+    <div class="pillars-grid">
+      <div class="pillar-card">
+        <div class="pillar-card-img-wrap"><img class="pillar-card-img" src="preview.webp" alt="Croatia"></div>
+        <div class="pillar-card-body">
+          <div class="pillar-icon"><i class="fa-solid fa-train"></i></div>
+          <h3>Low-Carbon Travel</h3>
+          <!-- Text adjusted to 5 times -->
+          <p>We exclusively use train travel — not because it looks good, but because the data is clear: rail emits about 5 times less CO&#178; per passenger kilometre than flying. We never compromise on this. <span class="keyword">#TrainTravelEurope</span></p>
+        </div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-card-img-wrap"><img class="pillar-card-img" src="preview-2.webp" alt="Slovenia"></div>
+        <div class="pillar-card-body">
+          <div class="pillar-icon"><i class="fa-solid fa-handshake"></i></div>
+          <h3>Local-First Economy</h3>
+          <p>Every euro you spend stays in the destination. We work exclusively with locally-owned accommodations, independent guides, and family-run suppliers — preventing economic leakage to multinational chains.</p>
+        </div>
+      </div>
+      <div class="pillar-card pillar-full">
+        <div class="pillar-card-img-wrap"><img class="pillar-card-img" src="preview-3.webp" alt="Italy"></div>
+        <div class="pillar-card-body">
+          <div class="pillar-icon"><i class="fa-solid fa-seedling"></i></div>
+          <h3>Regenerative Impact</h3>
+          <p>We go beyond neutral — and that word "beyond" is one we take seriously. Most travel companies stop at carbon neutrality: calculate the damage, pay someone to offset it, done. We think that misses the point entirely. <span class="keyword">#SustainableVacation</span></p>
+          <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:1rem;margin-top:1.2rem;">
+            <div style="background:rgba(122,158,126,0.08);border-radius:12px;padding:1rem;border-left:3px solid var(--sage-dark);">
+              <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--sage-dark);margin-bottom:0.4rem;">What it means</div>
+              <p style="font-size:0.85rem;color:var(--warm-gray);line-height:1.6;margin:0;">Instead of asking "how do we avoid damaging this place?", we ask: "how do we make it better because we were here?" Every trip is designed to leave measurable improvements behind.</p>
+            </div>
+            <div style="background:rgba(122,158,126,0.08);border-radius:12px;padding:1rem;border-left:3px solid var(--gold);">
+              <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--sage-dark);margin-bottom:0.4rem;">In practice</div>
+              <p style="font-size:0.85rem;color:var(--warm-gray);line-height:1.6;margin:0;">Our CO&#178;-Positive Upgrade funds Rewilding Europe's verified projects — independently audited, publicly reported. One family journey plants up to 40 trees in the Velebit mountains.</p>
+            </div>
+            <div style="background:rgba(201,168,76,0.1);border-radius:12px;padding:1rem;">
+              <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--charcoal);margin-bottom:0.4rem;">For your kids</div>
+              <p style="font-size:0.85rem;color:var(--warm-gray);line-height:1.6;margin:0;">Forest tracking, sapling planting, wildlife spotting — your children don't watch conservation happen, they are part of it. That is the difference between a trip that leaves a place unchanged and one that leaves it better.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="co2-section">
+    <div style="text-align:center;max-width:700px;margin:0 auto;">
+      <div class="section-label">The Numbers Don't Lie</div>
+      <div class="section-title">The <em>Impact</em> of Your Choice</div>
+      <!-- English translation of the provided text -->
+      <p style="color:var(--warm-gray);line-height:1.7;">According to the European Environment Agency (EEA), an airplane emits an average of 160 grams of CO&#178; per passenger kilometer, which is about five times higher than the 33 grams emitted by a train. Dickinson &amp; Lumsdon (2010) emphasize that transport accounts for 50% to 97.5% of the total travel footprint, making the choice of train travel crucial for lowering environmental impact.</p>
+    </div>
+    <div class="co2-visual" id="co2Visual">
+      <div class="co2-bar-row">
+        <div class="co2-bar-label">
+          <span><i class="fa-solid fa-plane" style="color:#e05050;"></i> Flying (per km)</span>
+          <!-- Adjusted EEA data -->
+          <span>160g CO&#178;</span>
+        </div>
+        <div class="co2-bar-track"><div class="co2-bar-fill plane"></div></div>
+      </div>
+      <div class="co2-bar-row">
+        <div class="co2-bar-label">
+          <span><i class="fa-solid fa-train" style="color:var(--sage-dark);"></i> Train (per km)</span>
+          <!-- Adjusted EEA data -->
+          <span>33g CO&#178;</span>
+        </div>
+        <div class="co2-bar-track"><div class="co2-bar-fill train"></div></div>
+      </div>
+      <!-- Source citation updated -->
+      <p style="text-align:center;font-size:0.85rem;color:var(--warm-gray);margin-top:1.5rem;">Source: European Environment Agency (EEA); Dickinson &amp; Lumsdon (2010)</p>
+    </div>
+  </section>
+
+  <section class="stakeholder-section">
+    <div style="text-align:center;max-width:800px;margin:0 auto;">
+      <div class="section-label">Collaboration is Key</div>
+      <div class="section-title">Our Sustainable <em>Stakeholders</em></div>
+      <p style="color:var(--warm-gray);line-height:1.6;">To conduct sustainable and regenerative business successfully, we work closely with groups inside and outside our company.</p>
+    </div>
+    <div class="stakeholder-grid">
+      <div class="stakeholder-box">
+        <h3>Internal Stakeholders</h3>
+        <ul class="sh-list">
+          <li><strong>Our Employees & Travel Planners</strong><p>We ensure fair wages, provide continuous sustainability training, and maintain a highly inclusive work environment where every voice matters.</p></li>
+          <li><strong>Local Tour Guides</strong><p>Treated as internal partners rather than contractors, we guarantee our certified local guides above-average compensation and reliable seasonal work.</p></li>
+          <li><strong>Shareholders & Management</strong><p>Committed to a strict 'Purpose over Profit' model, our leadership reinvests a minimum of 15% of annual profits directly into new ecological initiatives.</p></li>
+        </ul>
+      </div>
+      <div class="stakeholder-box">
+        <h3>External Stakeholders</h3>
+        <ul class="sh-list">
+          <li><strong>Local Communities</strong><p>We consciously select locally-owned accommodations to ensure that tourism revenue stays within the host countries, preventing economic leakage.</p></li>
+          <li><strong>Environmental NGOs</strong><p>We partner with verified NGOs (such as Rewilding Europe) to execute our CO&#178; Positive Upgrades, guaranteeing biological accuracy and real, tangible impact.</p></li>
+          <li><strong>Our Travelling Families</strong><p>We educate our clients on sustainable behaviour through immersive, fun, and eco-conscious activities, making sustainability an engaging experience rather than a chore.</p></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="goals-section">
+    <div style="text-align:center;">
+      <div class="section-label">Looking Ahead</div>
+      <div class="section-title">Concrete Goals for the <em>Future</em></div>
+    </div>
+    <div class="goals-grid">
+      <div class="goal-card">
+        <div class="goal-year">2027</div>
+        <h4>100% Circular & Zero-Waste Offices</h4>
+        <p>Transition our entire internal operation to digital-only, fully eliminating paper waste and single-use plastics from our supply chain based on circular economy principles.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-year">2029</div>
+        <h4>Expand Rewilding Networks</h4>
+        <p>Partner with 5 new certified European NGOs to offer CO&#178; Upgrades that actively fund marine conservation and coastal cleanups in the Mediterranean.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-year">2030</div>
+        <h4>B-Corp Certification</h4>
+        <p>Achieve official B-Corp status, proving through rigorous independent auditing that we consistently meet the highest standards of verified social and environmental performance.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="ai-disclaimer">
+    <i class="fa-solid fa-microchip"></i>
+    <div>
+      <strong>Transparent Communication: AI & The Environment</strong><br>
+      In line with our transparent CSR policy, we acknowledge the 'Paradox of Responsible Communication'. The code and structure of this website were generated with the assistance of AI to ensure an optimal user experience. Because we are aware of the high energy consumption associated with AI tasks, we actively compensate for this digital footprint by investing in additional carbon-offsetting initiatives.
+    </div>
+  </div>
+
+</div>
+
+<div id="page-blog" class="page">
+  <div class="blog-hero">
+    <div class="section-label" style="margin-bottom:1rem;">TM Travel Stories</div>
+    <h1>Why <span class="keyword">#SlowTravel</span> is the Ultimate Secret to Family Bonding in Europe</h1>
+    <div class="blog-meta">By TM Travel Team &bull; Reading time: 3 mins</div>
+  </div>
+
+  <section class="blog-content">
+    <p><span class="dropcap">H</span>ave you ever returned from a family vacation feeling like you need another holiday just to recover? As modern professionals juggling demanding careers, decision fatigue is real. Rushing from one famous landmark to the next, managing exhausted children, and trying to stick to a rigid schedule can quickly drain the joy out of exploring new places. That is exactly why we champion <span class="keyword">#SlowTravel</span> for families, especially those travelling with children in that magical 6 to 11 age group.</p>
+
+    <p>Slow travel is more than a trend. Researchers Dickinson and Lumsdon (2010) describe it as a fundamentally different approach to tourism, one built on shorter distances, lower-carbon choices, and a far greater emphasis on the travel experience itself. More recently, Manthiou et al. (2022) found that slow travel is about making conscious choices — choosing deceleration over speed so that the journey itself becomes a moment of connection rather than a stressful transfer between home and destination. For families, this shift is genuinely transformative.</p>
+
+    <p>When you choose to slow down and commit to just one beautiful destination, the real magic begins. Imagine replacing the chaos of airport security with a relaxing <span class="keyword">#TrainTravelEurope</span> experience. Whether your train winds through the Italian Alps or glides towards the Croatian coast, your family is not simply moving from point A to point B. You are actively sharing a moment. Card games, local snacks, and real conversation replace the frantic scroll through departure boards. The journey itself becomes the first memory of the trip.</p>
+
+    <p><span class="keyword">#FamilyFriendlyTravel</span> is not about seeing everything; it is about experiencing things deeply and with genuine curiosity. Research increasingly shows that parents seek immersive encounters with local communities specifically for the educational benefit of their children (ScienceDirect, 2024). Choose Italy, and slow travel means learning the place-based art of making pasta alongside a local family. It means sitting in a sun-warmed piazza, watching your children bravely order gelato in broken Italian. These are the moments where true intercultural understanding takes root — where children begin to see the world not as a backdrop for photos, but as a living community of which they are briefly, meaningfully, a part.</p>
+
+    <p>Perhaps you choose Slovenia for your adventure. Here, our <span class="keyword">#SustainableVacation</span> philosophy centres on <span class="keyword">#NatureConnection</span>. Around Lake Bled, children can run freely, paddle in crystal waters, and breathe clean alpine air. Slovenian communities have long held a deep cultural relationship with their natural environment, and engaging with that tradition teaches children something no classroom ever could: that caring for a landscape is itself a form of cultural heritage. A simple hike becomes a lesson in both environmental respect and global citizenship.</p>
+
+    <p>If you opt for the layered history of Croatia, our <span class="keyword">#TravelWithKids</span> approach tailors each exploration to curious minds. Walking the ancient walls of Dubrovnik becomes an interactive journey through centuries of Adriatic culture. Learning about local rewilding projects gives children a tangible sense of contribution — a powerful feeling that their <span class="keyword">#EcoFriendlyHoliday</span> leaves a positive mark rather than a footprint.</p>
+
+    <p>Curating these rich <span class="keyword">#CulturalExperiences</span> without a frantic pace allows your family to genuinely reconnect. A fully planned, low-stress itinerary lifts the logistical burden entirely off your shoulders. You are free to laugh, marvel at unexpected details, and build a legacy of memories that your children will carry long after the tan fades.</p>
+
+    <p>At TM Travel, we believe a holiday should never be a checklist. By embracing a slower, more deliberate way to explore a single destination, you give your children the world — and you give yourself the time to truly enjoy it alongside them.</p>
+
+    <div class="blog-sources">
+      <h4>Sources</h4>
+      <ul>
+        <li>Dickinson, J. &amp; Lumsdon, L. (2010). <em>Slow Travel and Tourism</em>. Earthscan.</li>
+        <li>Manthiou, A., Klaus, P., &amp; Luong, V. H. (2022). Slow tourism: Conceptualization and interpretation. <em>Tourism Management, 93</em>, 104570.</li>
+        <li>ScienceDirect (2024). Family travel as an educational experience: Revealing multi-level parents' perceived value through a family systems approach. <em>Journal of Hospitality, Leisure, Sport &amp; Tourism Education</em>.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<div id="page-contact" class="page">
+  <div class="contact-layout">
+    <div class="contact-left">
+      <h1>Plan Your<br>Family Journey</h1>
+      <p>Every great adventure starts with a conversation. Tell us about your family and we will design the perfect, stress-free trip for you.</p>
+    </div>
+    <div class="contact-right">
+      <h2>Tell Us About Your Family</h2>
+      <p>Fill in the form and we will get back to you within 24 hours.</p>
+      <div id="contactForm">
+        <form name="contact" method="POST" data-netlify="true" action="/thank-you" onsubmit="handleSubmit(event)">
+          <input type="hidden" name="form-name" value="contact">
+          <div class="form-row">
+            <div class="form-group"><label>Your Name</label><input type="text" name="name" placeholder="e.g. Sanne de Vries" required></div>
+            <div class="form-group"><label>Email</label><input type="email" name="email" placeholder="your@email.com" required></div>
+          </div>
+          <div class="form-group">
+            <label>Interested In</label>
+            <select name="destination">
+              <option>Option 1: Italy</option>
+              <option>Option 2: Slovenia</option>
+              <option>Option 3: Croatia</option>
+              <option>I'm not sure yet!</option>
+            </select>
+          </div>
+          <button type="submit" class="form-submit">Send My Request <i class="fa-solid fa-paper-plane" style="margin-left:5px;"></i></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="new-footer">
+  <h3 class="footer-usps-title">Why book your family journey with TM Travel?</h3>
+  <div class="footer-usps">
+    <div class="f-usp">
+      <i class="fa-solid fa-train"></i>
+      <h5>Low-Carbon Transport</h5>
+      <p>Exclusively train travel. Sustainable routes across Europe.</p>
+    </div>
+    <div class="f-usp">
+      <i class="fa-solid fa-campground"></i>
+      <h5>Fully Equipped</h5>
+      <p>Premium glamping & mobile homes situated right in the green.</p>
+    </div>
+    <div class="f-usp">
+      <i class="fa-solid fa-map-location-dot"></i>
+      <h5>100% Curated Routes</h5>
+      <p>Pre-planned itineraries so you can escape decision fatigue.</p>
+    </div>
+    <div class="f-usp">
+      <i class="fa-solid fa-users"></i>
+      <h5>Local & Certified</h5>
+      <p>We only work with independent, eco-certified local partners.</p>
+    </div>
+    <div class="f-usp">
+      <i class="fa-solid fa-seedling"></i>
+      <h5>Regenerative Impact</h5>
+      <p>Active reforestation & rewilding included in every family trip.</p>
+    </div>
+  </div>
+  
+  <div class="footer-bottom">
+    <div class="f-col">
+      <h6>Select your language</h6>
+      <div class="lang-select-wrapper">
+        <i class="fa-solid fa-globe"></i>
+        <select class="lang-select">
+          <option value="nl">🇳🇱 Nederlands (NL)</option>
+          <option value="en" selected>🇬🇧 English (EN)</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="f-col">
+      <h6>Follow us</h6>
+      <div class="social-links">
+        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+        <a href="#"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+
+    <div class="f-col">
+      <h6>Secure payments</h6>
+      <div class="payment-icons">
+        <div class="payment-icon"><i class="fa-brands fa-ideal" style="color:#cc0066; font-size:1.5rem;"></i></div>
+        <div class="payment-icon"><i class="fa-brands fa-cc-visa" style="color:#1a1f71; font-size:1.5rem;"></i></div>
+        <div class="payment-icon"><i class="fa-brands fa-cc-mastercard" style="color:#eb001b; font-size:1.5rem;"></i></div>
+        <div class="payment-icon"><i class="fa-brands fa-cc-paypal" style="color:#003087; font-size:1.5rem;"></i></div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function closeBanner() {
+    document.getElementById('topBanner').style.display = 'none';
+    document.body.classList.add('banner-closed');
+  }
+
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    const page = document.getElementById('page-' + name);
+    if (page) { page.style.display = 'block'; setTimeout(() => page.classList.add('active'), 10); }
+    const navLink = document.getElementById('nav-' + name);
+    if (navLink) navLink.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function showDay(num) {
+    document.querySelectorAll('.day-tab').forEach((t, i) => { t.classList.toggle('active', i === num - 1); });
+    document.querySelectorAll('.day-detail').forEach(d => d.classList.remove('active'));
+    const targetDay = document.getElementById('day-' + num);
+    if (targetDay) targetDay.classList.add('active');
+  }
+
+  function goToDestination(num) {
+    showPage('journey');
+    setTimeout(() => showDay(num), 100);
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+    fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(data).toString() })
+      .then(() => {
+        document.getElementById('contactForm').innerHTML = '<div style="text-align:center; padding:3rem; background:rgba(122,158,126,0.1); border-radius:12px;"><i class="fa-solid fa-circle-check" style="font-size:3rem; color:var(--sage-dark); margin-bottom:1rem; display:block;"></i><h3>Request Received!</h3><p>We will send your personalised itinerary within 24 hours.</p></div>';
+      })
+      .catch(() => alert('Something went wrong. Please try again.'));
+  }
+
+  // Animatie voor de CO2 balken
+  const co2Observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        document.querySelectorAll('.co2-bar-fill').forEach(bar => bar.classList.add('animated'));
+        co2Observer.disconnect();
+      }
+    });
+  }, { threshold: 0.3 });
+  
+  // Start met luisteren naar het CO2 gedeelte zodra de DOM geladen is
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('page-home').style.display = 'block';
+    setTimeout(() => document.getElementById('page-home').classList.add('active'), 10);
+    
+    const co2El = document.getElementById('co2Visual');
+    if (co2El) co2Observer.observe(co2El);
+  });
+</script>
+</body>
+</html>
